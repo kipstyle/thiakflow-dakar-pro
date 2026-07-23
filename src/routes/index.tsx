@@ -13,10 +13,10 @@ export const Route = createFileRoute("/")({
         content:
           "Doublez vos livraisons et divisez votre carburant à Dakar avec ThiakFlow : IA de regroupement de colis pour livreurs moto Tiak-Tiak.",
       },
-      { property: "og:title", content: "ThiakFlow — Tableau de bord temps réel" },
+      { property: "og:title", content: "ThiakFlow — Tableau de bord temps réel des livraisons à Dakar" },
       {
         property: "og:description",
-        content: "Plateforme IA d'optimisation des tournées Tiak-Tiak à Dakar.",
+        content: "Doublez vos livraisons et divisez votre carburant à Dakar avec ThiakFlow : IA de regroupement de colis pour livreurs moto Tiak-Tiak.",
       },
     ],
   }),

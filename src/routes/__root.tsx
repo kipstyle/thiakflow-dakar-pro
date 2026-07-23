@@ -72,15 +72,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ThiakFlow — Optimisation IA des tournées Tiak-Tiak à Dakar" },
+      { title: "ThiakFlow — Tableau de bord temps réel des livraisons à Dakar" },
       {
         name: "description",
         content:
-          "ThiakFlow regroupe les colis par secteur et optimise les tournées des livreurs moto à Dakar grâce à l'IA.",
+          "Doublez vos livraisons et divisez votre carburant à Dakar avec ThiakFlow : IA de regroupement de colis pour livreurs moto Tiak-Tiak.",
       },
       { name: "author", content: "ThiakFlow" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "ThiakFlow — Tableau de bord temps réel des livraisons à Dakar" },
+      { name: "twitter:title", content: "ThiakFlow — Tableau de bord temps réel des livraisons à Dakar" },
+      { property: "og:description", content: "Doublez vos livraisons et divisez votre carburant à Dakar avec ThiakFlow : IA de regroupement de colis pour livreurs moto Tiak-Tiak." },
+      { name: "twitter:description", content: "Doublez vos livraisons et divisez votre carburant à Dakar avec ThiakFlow : IA de regroupement de colis pour livreurs moto Tiak-Tiak." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2e3d43bb-cd7f-467d-bf61-c5ed0cda4407/id-preview-c6f9423b--14cf7fac-eef0-469e-91ea-fa45255d4e2e.lovable.app-1784801223361.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2e3d43bb-cd7f-467d-bf61-c5ed0cda4407/id-preview-c6f9423b--14cf7fac-eef0-469e-91ea-fa45255d4e2e.lovable.app-1784801223361.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
