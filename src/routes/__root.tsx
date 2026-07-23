@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/SiteHeader";
-import { BottomNav } from "@/components/BottomNav";
+
 
 function NotFoundComponent() {
   return (
@@ -128,7 +128,7 @@ function RootComponent() {
       <main className="min-h-[calc(100vh-64px)]">
         <Outlet />
       </main>
-      <BottomNav />
+      
     </QueryClientProvider>
   );
 }
