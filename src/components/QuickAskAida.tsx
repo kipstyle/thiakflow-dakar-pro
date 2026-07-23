@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Send, Loader2, Bot } from "lucide-react";
 
-const DIFY_URL = "https://api.dify.ai/v1";
+const DIFY_URL = "https://api.dify.ai/v1/workflows/run";
 const DIFY_KEY = "app-wgqk0lGkRsaZDOTSaahdvlDH";
 
 export function QuickAskAida() {
