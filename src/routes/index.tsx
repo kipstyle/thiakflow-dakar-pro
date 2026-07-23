@@ -3,6 +3,7 @@ import { Package, Wallet, TrendingUp, ArrowRight, Zap } from "lucide-react";
 import { DakarMap } from "@/components/DakarMap";
 import { StatCard } from "@/components/StatCard";
 import { SiteFooter } from "@/components/SiteFooter";
+import { QuickAskAida } from "@/components/QuickAskAida";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -56,7 +57,10 @@ function Index() {
                 Parler à Ai-da
               </Link>
             </div>
+
+            <QuickAskAida />
           </div>
+
 
           <DakarMap className="aspect-[4/3] w-full" />
         </div>
