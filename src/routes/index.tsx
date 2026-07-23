@@ -57,7 +57,10 @@ function Index() {
                 Parler à Ai-da
               </Link>
             </div>
+
+            <QuickAskAida />
           </div>
+
 
           <DakarMap className="aspect-[4/3] w-full" />
         </div>
