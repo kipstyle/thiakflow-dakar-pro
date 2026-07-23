@@ -3,6 +3,7 @@ import { Package, Wallet, TrendingUp, ArrowRight, Zap } from "lucide-react";
 import { DakarMap } from "@/components/DakarMap";
 import { StatCard } from "@/components/StatCard";
 import { SiteFooter } from "@/components/SiteFooter";
+import { QuickAskAida } from "@/components/QuickAskAida";
 
 export const Route = createFileRoute("/")({
   head: () => ({
