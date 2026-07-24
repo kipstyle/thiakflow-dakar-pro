@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TourneesRouteImport } from './routes/tournees'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SaisieTraficRouteImport } from './routes/saisie-trafic'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TourneesRoute = TourneesRouteImport.update({
@@ -23,6 +24,11 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SaisieTraficRoute = SaisieTraficRouteImport.update({
+  id: '/saisie-trafic',
+  path: '/saisie-trafic',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/saisie-trafic': typeof SaisieTraficRoute
   '/support': typeof SupportRoute
   '/tournees': typeof TourneesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/saisie-trafic': typeof SaisieTraficRoute
   '/support': typeof SupportRoute
   '/tournees': typeof TourneesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/saisie-trafic': typeof SaisieTraficRoute
   '/support': typeof SupportRoute
   '/tournees': typeof TourneesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/support' | '/tournees'
+  fullPaths: '/' | '/saisie-trafic' | '/support' | '/tournees'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/support' | '/tournees'
-  id: '__root__' | '/' | '/support' | '/tournees'
+  to: '/' | '/saisie-trafic' | '/support' | '/tournees'
+  id: '__root__' | '/' | '/saisie-trafic' | '/support' | '/tournees'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SaisieTraficRoute: typeof SaisieTraficRoute
   SupportRoute: typeof SupportRoute
   TourneesRoute: typeof TourneesRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/saisie-trafic': {
+      id: '/saisie-trafic'
+      path: '/saisie-trafic'
+      fullPath: '/saisie-trafic'
+      preLoaderRoute: typeof SaisieTraficRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,9 +104,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SaisieTraficRoute: SaisieTraficRoute,
   SupportRoute: SupportRoute,
   TourneesRoute: TourneesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
