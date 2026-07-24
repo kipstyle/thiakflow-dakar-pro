@@ -63,7 +63,7 @@ function SaisieTrafic() {
       if (!res.ok) throw new Error("http_" + res.status);
       const data = await res.json();
       const text =
-        data?.data?.outputs?.text ?? data?.outputs?.text ?? "Réponse indisponible.";
+        data?.data?.outputs?.answer ?? data?.data?.outputs?.text ?? data?.outputs?.answer ??  data?.outputs?.text ?? "Réponse indisponible.";
       setResult(text);
     } catch (err) {
       const isAbort =
