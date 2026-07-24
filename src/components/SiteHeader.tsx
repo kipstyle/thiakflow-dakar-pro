@@ -8,6 +8,7 @@ const links = [
   { to: "/", label: "Accueil" },
   { to: "/tournees", label: "Tournées" },
   { to: "/saisie-trafic", label: "Saisie Trafic" },
+  { to: "/saisie-terrain", label: "Saisie Terrain" },
   { to: "/support", label: "Support IA" },
 ] as const;
 
