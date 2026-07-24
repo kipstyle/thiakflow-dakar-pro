@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Send, Loader2, Bot } from "lucide-react";
 
 const DIFY_URL = "https://api.dify.ai/v1/workflows/run";
-const DIFY_KEY = "app-wgqk0lGkRsaZDOTSaahdvlDH";
+const DIFY_KEY = "app-XIELnMag32uMctjuHBqW8Tev";
 
 export function QuickAskAida() {
   const [query, setQuery] = useState("");
