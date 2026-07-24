@@ -69,7 +69,7 @@ export function QuickAskAida() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ex: Gain estimé Colobane → Almadies ?"
+          placeholder={"Ex: J'ai 3 courses : Colobane→Mermoz, Colobane→Almadies\\n(urgent), Sandaga→Médina"}
           className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-[#06b6d4]/50"
           disabled={loading}
         />
