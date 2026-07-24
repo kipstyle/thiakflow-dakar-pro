@@ -7,6 +7,7 @@ import { NetworkIndicator } from "./NetworkIndicator";
 const links = [
   { to: "/", label: "Accueil" },
   { to: "/tournees", label: "Tournées" },
+  { to: "/saisie-trafic", label: "Saisie Trafic" },
   { to: "/support", label: "Support IA" },
 ] as const;
 
