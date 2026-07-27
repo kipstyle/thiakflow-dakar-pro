@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Send, Bot, AlertTriangle, Package, Headphones } from "lucide-react";
+import { Send, Bot, AlertTriangle, Package, Headphones, Mic } from "lucide-react"; // 💡 Ajout de Mic
 
 export const Route = createFileRoute("/support")({
   head: () => ({
@@ -54,9 +54,50 @@ function Support() {
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // 💡 Nouveaux states pour la gestion du micro
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  // 💡 Fonction de reconnaissance vocale 100% locale
+  const toggleListening = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      alert("Désolé, votre navigateur ne supporte pas la saisie vocale.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.lang = 'fr-FR'; // Adapté pour les accents locaux
+    recognitionRef.current.continuous = false;
+    recognitionRef.current.interimResults = false;
+
+    recognitionRef.current.onstart = () => setIsListening(true);
+    
+    recognitionRef.current.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput((prev) => prev + (prev ? " " : "") + transcript);
+    };
+
+    recognitionRef.current.onerror = (event: any) => {
+      console.error("Erreur micro:", event.error);
+      setIsListening(false);
+    };
+
+    recognitionRef.current.onend = () => setIsListening(false);
+
+    recognitionRef.current.start();
+  };
 
   function send(text: string) {
     const value = text.trim();
@@ -64,6 +105,13 @@ function Support() {
     const userMsg: Msg = { id: Date.now(), role: "user", text: value };
     setMessages((m) => [...m, userMsg]);
     setInput("");
+    
+    // Arrête le micro si on envoie le message manuellement pendant l'écoute
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    }
+
     setTimeout(() => {
       setMessages((m) => [
         ...m,
@@ -137,16 +185,33 @@ function Support() {
         }}
         className="glass-card flex items-center gap-2 rounded-2xl p-2"
       >
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Écrivez à Ai-da…"
-          className="flex-1 bg-transparent px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground"
-        />
+        {/* 💡 Input englobé avec le bouton Mic en position absolue */}
+        <div className="relative flex-1">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Écrivez ou dictez à Ai-da…"
+            className="w-full bg-transparent px-3 py-2 pr-10 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+          />
+          <button
+            type="button"
+            onClick={toggleListening}
+            title="Dicter à voix haute"
+            className={`absolute right-1 top-1/2 -translate-y-1/2 p-2 transition-all duration-300 rounded-lg ${
+              isListening 
+                ? "text-[#ef4444] bg-[#ef4444]/20 animate-pulse" 
+                : "text-muted-foreground hover:text-white hover:bg-white/10"
+            }`}
+          >
+            <Mic className="h-4 w-4" />
+          </button>
+        </div>
+        
         <button
           type="submit"
           aria-label="Envoyer"
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#06b6d4] text-[#041014] neon-cyan transition hover:brightness-110"
+          disabled={!input.trim()}
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#06b6d4] text-[#041014] neon-cyan transition hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send className="h-4 w-4" />
         </button>
