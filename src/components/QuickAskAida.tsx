@@ -1,14 +1,56 @@
-import { useState } from "react";
-import { Send, Loader2, Bot } from "lucide-react";
+import { useState, useRef } from "react";
+import { Send, Loader2, Bot, Mic } from "lucide-react"; // 💡 Ajout de l'icône Mic
 
 const DIFY_URL = "https://api.dify.ai/v1/workflows/run";
-const DIFY_KEY = "app-XIELnMag32uMctjuHBqW8Tev";
+const DIFY_KEY = "app-XIELnMag32uMctjuHBqW8Tev"; 
 
 export function QuickAskAida() {
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // 💡 Nouveaux states pour la gestion du micro
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // 💡 Fonction 100% locale (Zéro token) pour la reconnaissance vocale
+  const toggleListening = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      setError("Désolé, votre navigateur ne supporte pas la saisie vocale.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.lang = 'fr-FR'; // Adapté pour comprendre les accents locaux
+    recognitionRef.current.continuous = false;
+    recognitionRef.current.interimResults = false;
+
+    recognitionRef.current.onstart = () => setIsListening(true);
+    
+    recognitionRef.current.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      // On ajoute le texte vocal à ce qui est potentiellement déjà écrit
+      setQuery((prev) => prev + (prev ? " " : "") + transcript);
+    };
+
+    recognitionRef.current.onerror = (event: any) => {
+      console.error("Erreur micro:", event.error);
+      setIsListening(false);
+    };
+
+    recognitionRef.current.onend = () => setIsListening(false);
+
+    recognitionRef.current.start();
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,7 +80,7 @@ export function QuickAskAida() {
       });
       if (!res.ok) throw new Error("http_" + res.status);
       const data = await res.json();
-      setAnswer(data.answer ?? "Réponse indisponible.");
+      setAnswer(data?.data?.outputs?.answer ?? "Réponse indisponible.");
     } catch (err) {
       const isAbort =
         (err instanceof DOMException && err.name === "AbortError") ||
@@ -66,13 +108,29 @@ export function QuickAskAida() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={"Ex: J'ai 3 courses : Colobane→Mermoz, Colobane→Almadies\n(urgent), Sandaga→Médina"}
-          className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-[#06b6d4]/50"
-          disabled={loading}
-        />
+        {/* 💡 Modification UI : On englobe l'input pour y glisser le bouton micro */}
+        <div className="relative flex-1">
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={"Ex: J'ai 3 courses : Colobane→Mermoz..."}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 pr-10 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-[#06b6d4]/50"
+            disabled={loading}
+          />
+          <button
+            type="button"
+            onClick={toggleListening}
+            title="Dicter à voix haute"
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-1.5 transition-all duration-300 rounded-md ${
+              isListening 
+                ? "text-[#ef4444] bg-[#ef4444]/20 animate-pulse" // Effet néon rouge quand ça écoute
+                : "text-muted-foreground hover:text-white hover:bg-white/10"
+            }`}
+          >
+            <Mic className="h-4 w-4" />
+          </button>
+        </div>
+        
         <button
           type="submit"
           disabled={loading || !query.trim()}
